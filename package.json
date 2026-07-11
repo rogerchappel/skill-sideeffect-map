@@ -1,0 +1,26 @@
+{
+  "name": "skill-sideeffect-map",
+  "version": "0.1.0",
+  "description": "Map side effects and approval gates in agent skill documentation.",
+  "type": "module",
+  "bin": {
+    "skill-sideeffect-map": "./bin/skill-sideeffect-map.js"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "check": "node scripts/check.js",
+    "smoke": "node bin/skill-sideeffect-map.js scan fixtures/skill-basic --format markdown",
+    "test": "node --test"
+  },
+  "keywords": [
+    "agent",
+    "skills",
+    "approval",
+    "dry-run",
+    "audit"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

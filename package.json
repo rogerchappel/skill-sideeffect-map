@@ -26,5 +26,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rogerchappel/skill-sideeffect-map.git"
-  }
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "fixtures",
+    "scripts",
+    "test",
+    "SKILL.md",
+    "README.md",
+    "LICENSE"
+  ]
 }

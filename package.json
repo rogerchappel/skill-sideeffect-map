@@ -10,7 +10,8 @@
     "build": "node scripts/build.js",
     "check": "node scripts/check.js",
     "smoke": "node bin/skill-sideeffect-map.js scan fixtures/skill-basic --format markdown",
-    "test": "node --test"
+    "test": "node --test",
+    "package:smoke": "npm pack --dry-run"
   },
   "keywords": [
     "agent",
@@ -22,5 +23,20 @@
   "license": "MIT",
   "engines": {
     "node": ">=20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/skill-sideeffect-map.git"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "fixtures",
+    "scripts",
+    "test",
+    "SKILL.md",
+    "README.md",
+    "LICENSE"
+  ]
 }

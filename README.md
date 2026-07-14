@@ -7,6 +7,7 @@
 ```bash
 npm install
 npm test
+npm run release:check
 node bin/skill-sideeffect-map.js scan fixtures/skill-basic --format markdown
 node bin/skill-sideeffect-map.js check fixtures/skill-missing-approval
 ```
@@ -16,6 +17,16 @@ node bin/skill-sideeffect-map.js check fixtures/skill-missing-approval
 - `scan <path>` emits a JSON or Markdown side-effect report.
 - `check <path>` fails when high-risk side effects lack approval language.
 - `render <path>` produces release-note friendly Markdown.
+
+## Release Verification
+
+Run the release gate before opening a release-facing pull request:
+
+```bash
+npm run release:check
+```
+
+The gate runs syntax checks, the Node test suite, a fixture-backed CLI smoke, and an `npm pack --dry-run` package check. CI runs the same command on pull requests and pushes to `main`.
 
 ## Safety Notes
 

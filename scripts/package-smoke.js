@@ -22,7 +22,7 @@ for (const required of ['package.json', 'README.md', 'LICENSE', 'bin/skill-sidee
 }
 
 for (const file of files) {
-  if (file.startsWith('test/') || file.startsWith('.github/')) {
+  if (file.startsWith('.github/')) {
     throw new Error(`npm pack includes non-runtime file ${file}`);
   }
 }

@@ -6,11 +6,21 @@
   "bin": {
     "skill-sideeffect-map": "./bin/skill-sideeffect-map.js"
   },
+  "files": [
+    "bin",
+    "src",
+    "fixtures",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "node scripts/build.js",
     "check": "node scripts/check.js",
     "smoke": "node bin/skill-sideeffect-map.js scan fixtures/skill-basic --format markdown",
-    "test": "node --test"
+    "test": "node --test",
+    "package:smoke": "node scripts/package-smoke.js",
+    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "agent",
@@ -20,6 +30,14 @@
     "audit"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/skill-sideeffect-map.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/skill-sideeffect-map/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/skill-sideeffect-map#readme",
   "engines": {
     "node": ">=20"
   }

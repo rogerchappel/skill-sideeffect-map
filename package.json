@@ -11,7 +11,7 @@
     "check": "node scripts/check.js",
     "smoke": "node bin/skill-sideeffect-map.js scan fixtures/skill-basic --format markdown",
     "test": "node --test",
-    "package:smoke": "npm pack --dry-run",
+    "package:smoke": "node scripts/package-smoke.js",
     "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke"
   },
   "keywords": [

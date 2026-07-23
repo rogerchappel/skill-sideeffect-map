@@ -15,7 +15,7 @@ node bin/skill-sideeffect-map.js check fixtures/skill-missing-approval
 ## Commands
 
 - `scan <path>` emits a JSON or Markdown side-effect report.
-- `check <path>` fails when high-risk side effects lack approval language.
+- `check <path>` fails when any high-risk evidence line lacks its own positive approval language.
 - `render <path>` produces release-note friendly Markdown.
 
 ## Release Verification
@@ -27,6 +27,10 @@ npm run release:check
 ```
 
 The gate runs syntax checks, the Node test suite, a fixture-backed CLI smoke, and an `npm pack --dry-run` package check. CI runs the same command on pull requests and pushes to `main`.
+
+## Approval Check Semantics
+
+Approval is scoped to each high-risk evidence line. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over, and negated wording such as `send an email without confirmation` fails. Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
 
 ## Safety Notes
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Scope approval checks to each high-risk evidence line and report actionable file, line, and category details.
+- Treat negated approval wording as unapproved and add regression fixtures for unrelated, scoped, and partially approved actions.
+
 ## 0.1.0
 
 - Initial release-candidate surface for the local side-effect mapping CLI.

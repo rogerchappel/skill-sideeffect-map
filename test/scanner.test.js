@@ -33,6 +33,18 @@ test("explicit approval tied to high-risk messaging passes", async () => {
   assert.deepEqual(result.failures, []);
 });
 
+test("predicate-negated and non-requirement wording does not approve messaging", async () => {
+  const report = await scanPath("fixtures/skill-negated-approval");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, false);
+  for (const line of [3, 4, 5, 6, 7]) {
+    assert.ok(result.failures.some((failure) =>
+      failure.includes(`fixtures/skill-negated-approval/SKILL.md:${line} messaging`)
+    ));
+  }
+});
+
 test("each high-risk evidence item needs its own approval", async () => {
   const report = await scanPath("fixtures/skill-multiple-high-risk");
   const result = checkReport(report);

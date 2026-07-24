@@ -30,7 +30,16 @@ The gate runs syntax checks, the Node test suite, a fixture-backed CLI smoke, an
 
 ## Approval Check Semantics
 
-Approval is scoped to each high-risk evidence line. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over, and negated wording such as `send an email without confirmation` fails. Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
+Approval is scoped to each high-risk evidence line and must positively require approval. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over.
+
+Negated and non-requirement wording fails, including:
+
+- `Send an email without confirmation.`
+- `Approval is not required before sending an email.`
+- `You do not need confirmation before posting a message.`
+- `Consent is optional before you message the customer.`
+
+Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
 
 ## Safety Notes
 

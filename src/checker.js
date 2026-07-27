@@ -11,15 +11,31 @@ export function checkReport(report) {
 }
 
 function hasExplicitApproval(text) {
-  const approval = /\b(approval|confirm(?:ation)?|consent)\b/i;
-  const approvalToken = String.raw`(?:explicit\s+)?(?:user\s+)?(?:approval|confirm(?:ation)?|consent)`;
-  const negated = [
-    new RegExp(String.raw`\b(?:without|no|not|never)\s+${approvalToken}\b`, "i"),
-    new RegExp(String.raw`\b(?:do\s+not|don't)\s+(?:ask|require|wait|need)\s+(?:for\s+)?${approvalToken}\b`, "i"),
-    new RegExp(String.raw`\b${approvalToken}\s+(?:is\s+not|isn't)\s+(?:required|needed|necessary)\b`, "i"),
-    new RegExp(String.raw`\b${approvalToken}\s+(?:is\s+)?(?:optional|unnecessary)\b`, "i"),
-    new RegExp(String.raw`\bno\s+${approvalToken}\s+is\s+(?:required|needed|necessary)\b`, "i"),
-    new RegExp(String.raw`\bneed\s+not\s+(?:ask\s+for|obtain|require|wait\s+for)\s+${approvalToken}\b`, "i")
+  const approval = String.raw`(?:explicit\s+)?(?:user\s+)?(?:approval|confirm(?:ation)?|consent)`;
+  const nonAuthorizing = [
+    new RegExp(String.raw`\b(?:without|no|not|never)\s+${approval}\b`, "i"),
+    new RegExp(String.raw`\b(?:do\s+not|don't|need\s+not)\b[^.]*\b${approval}\b`, "i"),
+    new RegExp(String.raw`\b${approval}\s+(?:is\s+not|isn't|was\s+not|wasn't)\b`, "i"),
+    new RegExp(String.raw`\b${approval}\s+(?:is\s+)?(?:optional|unnecessary)\b`, "i")
   ];
-  return approval.test(text) && !negated.some((pattern) => pattern.test(text));
+  const positiveGates = [
+    new RegExp(
+      String.raw`\b(?:ask|request|obtain|get|receive|secure|require|wait)\s+(?:for\s+)?${approval}\s+(?:before|prior\s+to)\b`,
+      "i"
+    ),
+    new RegExp(
+      String.raw`\b${approval}\s+(?:is\s+)?(?:required|needed|necessary)\s+(?:before|prior\s+to)\b`,
+      "i"
+    ),
+    new RegExp(
+      String.raw`\bonly\b.+\b(?:after|upon)\s+(?:obtaining|receiving|getting|securing)\s+${approval}\b`,
+      "i"
+    ),
+    new RegExp(
+      String.raw`\b(?:if|once|when|after)\s+(?:the\s+)?(?:user\s+)?(?:gives?|grants?|provides?|confirms?|has\s+given|has\s+granted|has\s+provided)\s+${approval}\b`,
+      "i"
+    )
+  ];
+  return !nonAuthorizing.some((pattern) => pattern.test(text))
+    && positiveGates.some((pattern) => pattern.test(text));
 }

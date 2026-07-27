@@ -32,12 +32,20 @@ The gate runs syntax checks, the Node test suite, a fixture-backed CLI smoke, an
 
 Approval is scoped to each high-risk evidence line and must positively require approval. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over.
 
+Supported positive gates put the approval and action on the same line using an explicit ordering or condition, such as:
+
+- requesting, obtaining, requiring, or waiting for approval before the action;
+- performing the action only after receiving approval; or
+- performing the action if, when, or once the user gives approval.
+
 Negated and non-requirement wording fails, including:
 
 - `Send an email without confirmation.`
 - `Approval is not required before sending an email.`
 - `You do not need confirmation before posting a message.`
 - `Consent is optional before you message the customer.`
+
+Merely describing an approval outcome is also insufficient. Wording such as `If approval is denied, send the email anyway`, or actions taken when approval fails, is refused, or is absent, does not authorize the action.
 
 Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
 

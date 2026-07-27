@@ -45,6 +45,26 @@ test("predicate-negated and non-requirement wording does not approve messaging",
   }
 });
 
+test("denied, failed, refused, and absent approval does not authorize messaging", async () => {
+  const report = await scanPath("fixtures/skill-non-authorizing-approval");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, false);
+  for (const line of [3, 4, 5, 6]) {
+    assert.ok(result.failures.some((failure) =>
+      failure.includes(`fixtures/skill-non-authorizing-approval/SKILL.md:${line} messaging`)
+    ));
+  }
+});
+
+test("positive approval gates authorize their high-risk actions", async () => {
+  const report = await scanPath("fixtures/skill-positive-approval-gates");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.failures, []);
+});
+
 test("each high-risk evidence item needs its own approval", async () => {
   const report = await scanPath("fixtures/skill-multiple-high-risk");
   const result = checkReport(report);

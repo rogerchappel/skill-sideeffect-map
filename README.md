@@ -49,10 +49,12 @@ Merely describing an approval outcome is also insufficient. Wording such as `If 
 
 Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
 
+High-risk classification also considers action polarity and nearby context. Descriptive connector references, quoted action examples, and explicit prohibitions such as `must not send a message` are not actionable evidence. Intended external actions such as sending, posting, notifying, or using a named connector remain high-risk; each still needs a positive approval gate on that same line.
+
 ## Safety Notes
 
 The CLI does not call remote services, install skills, enforce runtime permissions, or read secret values. It is an evidence helper for humans and agents reviewing side-effect boundaries.
 
 ## Limitations
 
-Classification is keyword based. Treat the output as a review queue, not a security guarantee.
+Classification uses keyword and same-clause context heuristics rather than full natural-language parsing. Unusual grammar, indirect intent, mixed positive and prohibited actions in one clause, or domain-specific verbs can still be missed or misclassified. Quoted and inline-code text is treated as descriptive. Treat the output as a review queue, not a security guarantee.

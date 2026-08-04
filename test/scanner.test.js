@@ -15,6 +15,39 @@ test("fails high risk reports without approval language", async () => {
   assert.equal(result.ok, false);
 });
 
+test("ignores descriptive mentions and explicit prohibitions", async () => {
+  const report = await scanPath("fixtures/skill-descriptive-and-prohibited");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, true);
+  assert.equal(result.highRiskCount, 0);
+  assert.deepEqual(
+    report.evidence.filter((item) => item.risk === "high"),
+    []
+  );
+});
+
+test("retains file, line, and category evidence for intended external actions", async () => {
+  const report = await scanPath("fixtures/skill-intended-external-actions");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.failures, [
+    "fixtures/skill-intended-external-actions/SKILL.md:3 credentialed connector requires explicit approval on the same evidence line.",
+    "fixtures/skill-intended-external-actions/SKILL.md:3 messaging requires explicit approval on the same evidence line."
+  ]);
+  assert.ok(report.evidence.some((item) =>
+    item.file === "fixtures/skill-intended-external-actions/SKILL.md"
+      && item.line === 4
+      && item.category === "messaging"
+  ));
+  assert.ok(report.evidence.some((item) =>
+    item.file === "fixtures/skill-intended-external-actions/SKILL.md"
+      && item.line === 5
+      && item.category === "credentialed connector"
+  ));
+});
+
 test("unrelated approval and negated confirmation do not approve messaging", async () => {
   const report = await scanPath("fixtures/skill-unrelated-approval");
   const result = checkReport(report);

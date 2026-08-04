@@ -33,8 +33,8 @@ test("retains file, line, and category evidence for intended external actions", 
 
   assert.equal(result.ok, false);
   assert.deepEqual(result.failures, [
-    "fixtures/skill-intended-external-actions/SKILL.md:3 messaging requires explicit approval on the same evidence line.",
-    "fixtures/skill-intended-external-actions/SKILL.md:3 credentialed connector requires explicit approval on the same evidence line."
+    "fixtures/skill-intended-external-actions/SKILL.md:3 credentialed connector requires explicit approval on the same evidence line.",
+    "fixtures/skill-intended-external-actions/SKILL.md:3 messaging requires explicit approval on the same evidence line."
   ]);
   assert.ok(report.evidence.some((item) =>
     item.file === "fixtures/skill-intended-external-actions/SKILL.md"

@@ -5,6 +5,7 @@
 - Scope approval checks to each high-risk evidence line and report actionable file, line, and category details.
 - Treat negated approval wording as unapproved and add regression fixtures for unrelated, scoped, and partially approved actions.
 - Reject predicate-negated and optional approval wording such as `approval is not required`, `do not need confirmation`, and `consent is optional`.
+- Ignore descriptive, quoted, and explicitly prohibited high-risk mentions while retaining actionable file, line, and category evidence for intended external actions.
 
 ## 0.1.0
 

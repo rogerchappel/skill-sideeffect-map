@@ -14,4 +14,4 @@ Ship.
 
 ## Known Limits
 
-Keyword classification can miss implicit side effects or flag benign examples.
+Keyword and same-clause context classification can miss implicit or unusually phrased side effects. Quoted text is treated as descriptive, and mixed-polarity clauses may require human review.

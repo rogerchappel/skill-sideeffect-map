@@ -9,16 +9,13 @@ const usage = `Usage:
 `;
 
 export async function main(argv) {
-  const [command, target, ...flags] = argv;
+  const [command] = argv;
   if (!command || command === "--help" || command === "-h") {
     console.log(usage.trim());
     return;
   }
-  if (!target) {
-    throw new Error(usage.trim());
-  }
 
-  const format = readFlag(flags, "--format") ?? (command === "scan" ? "json" : "markdown");
+  const { target, format } = parseArgs(argv);
   const report = await scanPath(target);
 
   if (command === "scan" || command === "render") {
@@ -33,10 +30,48 @@ export async function main(argv) {
     }
     return;
   }
-  throw new Error(`Unknown command: ${command}\n${usage.trim()}`);
 }
 
-function readFlag(flags, name) {
-  const index = flags.indexOf(name);
-  return index === -1 ? undefined : flags[index + 1];
+function parseArgs([command, target, ...args]) {
+  if (!new Set(["scan", "render", "check"]).has(command)) {
+    fail(`Unknown command: ${command}`);
+  }
+  if (!target || target.startsWith("--")) {
+    fail(`Missing path for ${command}`);
+  }
+
+  let requestedFormat;
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index];
+    if (argument !== "--format") {
+      fail(argument.startsWith("--")
+        ? `Unknown flag: ${argument}`
+        : `Unexpected argument: ${argument}`);
+    }
+    if (command === "check") {
+      fail("Flag --format is not valid for check");
+    }
+    if (requestedFormat !== undefined) {
+      fail("Duplicate flag: --format");
+    }
+
+    const value = args[index + 1];
+    if (!value || value.startsWith("--")) {
+      fail("Missing value for --format");
+    }
+    if (!new Set(["json", "markdown"]).has(value)) {
+      fail(`Unsupported format: ${value}`);
+    }
+    requestedFormat = value;
+    index += 1;
+  }
+
+  return {
+    target,
+    format: requestedFormat ?? (command === "scan" ? "json" : "markdown")
+  };
+}
+
+function fail(message) {
+  throw new Error(`${message}\n\n${usage.trim()}`);
 }

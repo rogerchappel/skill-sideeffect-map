@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Reject malformed CLI arguments instead of silently ignoring unknown, duplicate, unsupported, or command-inapplicable flags.
 - Scope approval checks to each high-risk evidence line and report actionable file, line, and category details.
 - Treat negated approval wording as unapproved and add regression fixtures for unrelated, scoped, and partially approved actions.
 - Reject predicate-negated and optional approval wording such as `approval is not required`, `do not need confirmation`, and `consent is optional`.

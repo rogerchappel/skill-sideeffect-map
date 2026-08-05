@@ -18,6 +18,13 @@ node bin/skill-sideeffect-map.js check fixtures/skill-missing-approval
 - `check <path>` fails when any high-risk evidence line lacks its own positive approval language.
 - `render <path>` produces release-note friendly Markdown.
 
+`scan` defaults to JSON and `render` defaults to Markdown. Both accept exactly one
+optional `--format json|markdown` flag. `check` does not accept `--format`.
+
+Argument errors are stable automation failures: unknown or duplicate flags, missing
+flag values, unsupported formats, extra arguments, and flags that do not apply to a
+command print a concise diagnostic followed by usage help to stderr and exit nonzero.
+
 ## Release Verification
 
 Run the release gate before opening a release-facing pull request:

@@ -37,7 +37,7 @@ The gate runs syntax checks, the Node test suite, a fixture-backed CLI smoke, an
 
 ## Approval Check Semantics
 
-Approval is scoped to each high-risk evidence line and must positively require approval. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over.
+Approval is scoped to each high-risk action clause and must positively require approval. For example, `Ask for approval before you send an email` passes for that messaging action. Approval mentioned only for a different action does not carry over, even when both actions appear on one line: `Ask for approval before you send an email, then publish it to Notion` still requires approval for the Notion action.
 
 Supported positive gates put the approval and action on the same line using an explicit ordering or condition, such as:
 

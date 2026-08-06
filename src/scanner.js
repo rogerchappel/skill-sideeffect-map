@@ -17,7 +17,8 @@ export async function scanPath(targetPath) {
           category: match.category,
           risk: match.risk,
           reason: match.reason,
-          text: line.trim()
+          text: line.trim(),
+          actionText: match.actionText
         });
       }
     });

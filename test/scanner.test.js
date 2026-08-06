@@ -107,3 +107,14 @@ test("each high-risk evidence item needs its own approval", async () => {
   assert.ok(result.failures.some((failure) => failure.includes("messaging")));
   assert.ok(result.failures.some((failure) => failure.includes("credentialed connector")));
 });
+
+test("approval is scoped to each action clause on the same line", async () => {
+  const report = await scanPath("fixtures/skill-same-line-mixed-approval");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.failures, [
+    "fixtures/skill-same-line-mixed-approval/SKILL.md:3 credentialed connector requires explicit approval on the same evidence line."
+  ]);
+  assert.equal(result.failures.some((failure) => failure.includes(":4 ")), false);
+});

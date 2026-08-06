@@ -30,26 +30,34 @@ const prohibition = /\b(?:must\s+not|do\s+not|don't|never|cannot|can't|may\s+not
 
 export function classifyLine(line) {
   const actionableText = maskDescriptiveQuotes(line);
-  const actions = actionRules
-    .filter((rule) => hasAffirmativeAction(actionableText, rule))
-    .map(({ category, risk, reason }) => ({ category, risk, reason }));
+  const actions = actionRules.flatMap((rule) => affirmativeActions(actionableText, rule));
   const mentions = mentionRules
     .filter(([, , pattern]) => pattern.test(line))
     .map(([category, risk, , reason]) => ({ category, risk, reason }));
   return [...actions, ...mentions];
 }
 
-function hasAffirmativeAction(line, rule) {
+function affirmativeActions(line, rule) {
+  const actions = [];
+  const seenClauses = new Set();
   rule.pattern.lastIndex = 0;
   for (const match of line.matchAll(rule.pattern)) {
     if (isProhibited(line, match.index)) continue;
+    const clause = actionClauseAt(line, match.index);
     if (rule.requiresActionContext) {
-      const clause = clauseAt(line, match.index).text;
-      if (!externalAction.test(clause) && !directConnectorUse.test(clause)) continue;
+      if (!externalAction.test(clause.text) && !directConnectorUse.test(clause.text)) continue;
     }
-    return true;
+    const key = `${clause.start}:${clause.end}`;
+    if (seenClauses.has(key)) continue;
+    seenClauses.add(key);
+    actions.push({
+      category: rule.category,
+      risk: rule.risk,
+      reason: rule.reason,
+      actionText: clause.text.trim()
+    });
   }
-  return false;
+  return actions;
 }
 
 function isProhibited(line, actionIndex) {
@@ -65,6 +73,15 @@ function clauseAt(line, index) {
   const endings = [line.indexOf(".", index), line.indexOf(";", index)].filter((value) => value !== -1);
   const end = endings.length === 0 ? line.length : Math.min(...endings);
   return { text: line.slice(start, end), start };
+}
+
+function actionClauseAt(line, index) {
+  const boundaries = [...line.matchAll(/[.;:]|,(?=\s*then\b)/gi)].map((match) => match.index);
+  const previous = boundaries.filter((boundary) => boundary < index);
+  const next = boundaries.filter((boundary) => boundary >= index);
+  const start = (previous.at(-1) ?? -1) + 1;
+  const end = next[0] ?? line.length;
+  return { text: line.slice(start, end), start, end };
 }
 
 function maskDescriptiveQuotes(line) {

@@ -1,6 +1,6 @@
 export function checkReport(report) {
   const high = report.evidence.filter((item) => item.risk === "high");
-  const unapproved = high.filter((item) => !hasExplicitApproval(item.text));
+  const unapproved = high.filter((item) => !hasExplicitApproval(item.actionText ?? item.text));
   return {
     ok: unapproved.length === 0,
     failures: unapproved.map(

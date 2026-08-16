@@ -9,7 +9,16 @@ export async function scanPath(targetPath) {
   const evidence = [];
   for (const file of files) {
     const text = await readFile(file, "utf8");
+    let fence = null;
     text.split(/\r?\n/).forEach((line, index) => {
+      if (file.endsWith(".md")) {
+        if (fence) {
+          if (isFenceCloser(line, fence)) fence = null;
+          return;
+        }
+        fence = fenceOpener(line);
+        if (fence) return;
+      }
       for (const match of classifyLine(line)) {
         evidence.push({
           file: path.relative(process.cwd(), file),
@@ -31,6 +40,19 @@ export async function scanPath(targetPath) {
     evidence,
     recommendations: recommendations(categories)
   };
+}
+
+function fenceOpener(line) {
+  const match = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+  if (!match) return null;
+  const marker = match[1][0];
+  if (marker === "`" && match[2].includes("`")) return null;
+  return { marker, length: match[1].length };
+}
+
+function isFenceCloser(line, fence) {
+  const match = /^ {0,3}(`+|~+)[ \t]*$/.exec(line);
+  return match?.[1][0] === fence.marker && match[1].length >= fence.length;
 }
 
 async function collectFiles(targetPath) {

@@ -135,3 +135,15 @@ test("treats CommonMark fenced examples as descriptive and resumes after their c
     ]
   );
 });
+
+test("continues line scanning JSON that contains Markdown fence markers", async () => {
+  const report = await scanPath("fixtures/skill-json-fence-like");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, true);
+  assert.ok(report.evidence.some((item) =>
+    item.file === "fixtures/skill-json-fence-like/actions.json"
+      && item.line === 3
+      && item.category === "repository action"
+  ));
+});

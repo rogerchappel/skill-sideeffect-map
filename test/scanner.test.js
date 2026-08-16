@@ -118,3 +118,20 @@ test("approval is scoped to each action clause on the same line", async () => {
   ]);
   assert.equal(result.failures.some((failure) => failure.includes(":4 ")), false);
 });
+
+test("treats CommonMark fenced examples as descriptive and resumes after their closers", async () => {
+  const report = await scanPath("fixtures/skill-fenced-examples");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.failures, []);
+  assert.deepEqual(
+    report.evidence
+      .filter((item) => item.category === "messaging")
+      .map((item) => [item.file, item.line]),
+    [
+      ["fixtures/skill-fenced-examples/backtick.md", 8],
+      ["fixtures/skill-fenced-examples/tilde.md", 9]
+    ]
+  );
+});

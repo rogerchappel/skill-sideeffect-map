@@ -56,7 +56,7 @@ Merely describing an approval outcome is also insufficient. Wording such as `If 
 
 Failure output identifies the file, line, and high-risk category that needs an explicit approval instruction.
 
-High-risk classification also considers action polarity and nearby context. Descriptive connector references, quoted action examples, Markdown fenced code blocks, and explicit prohibitions such as `must not send a message` are not actionable evidence. Backtick and tilde fences follow CommonMark closing semantics: the closer must use the opening marker and contain at least as many markers. Scanning resumes with the first line after the closer. Intended external actions such as sending, posting, notifying, or using a named connector remain high-risk; each still needs a positive approval gate on that same line.
+High-risk classification also considers action polarity and nearby context. Descriptive connector references, quoted action examples, Markdown fenced code blocks, and explicit prohibitions such as `must not send a message` are not actionable evidence. Inline code introduced by an execution directive such as `Run \`send the customer an email\`` is actionable, while a descriptive mention remains ignored. Backtick and tilde fences follow CommonMark closing semantics: the closer must use the opening marker and contain at least as many markers. Scanning resumes with the first line after the closer. Intended external actions such as sending, posting, notifying, or using a named connector remain high-risk; each still needs a positive approval gate on that same line.
 
 ## Safety Notes
 
@@ -64,4 +64,4 @@ The CLI does not call remote services, install skills, enforce runtime permissio
 
 ## Limitations
 
-Classification uses keyword and same-clause context heuristics rather than full natural-language parsing. Unusual grammar, indirect intent, mixed positive and prohibited actions in one clause, or domain-specific verbs can still be missed or misclassified. Quoted text, inline code, and Markdown fenced code blocks are treated as descriptive. JSON remains line-scanned and does not apply Markdown fence semantics. Treat the output as a review queue, not a security guarantee.
+Classification uses keyword and same-clause context heuristics rather than full natural-language parsing. Unusual grammar, indirect intent, mixed positive and prohibited actions in one clause, or domain-specific verbs can still be missed or misclassified. Quoted text, descriptive inline code, and Markdown fenced code blocks are treated as descriptive; inline code directly introduced by run, execute, perform, invoke, or follow is scanned as an instruction. JSON remains line-scanned and does not apply Markdown fence semantics. Treat the output as a review queue, not a security guarantee.

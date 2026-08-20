@@ -147,3 +147,19 @@ test("continues line scanning JSON that contains Markdown fence markers", async 
       && item.category === "repository action"
   ));
 });
+
+test("distinguishes executable inline code from descriptive examples", async () => {
+  const report = await scanPath("fixtures/skill-inline-code");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.failures, [
+    "fixtures/skill-inline-code/SKILL.md:3 messaging requires explicit approval on the same evidence line."
+  ]);
+  assert.deepEqual(
+    report.evidence
+      .filter((item) => item.category === "messaging")
+      .map((item) => item.line),
+    [3, 5]
+  );
+});

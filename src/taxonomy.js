@@ -85,5 +85,19 @@ function actionClauseAt(line, index) {
 }
 
 function maskDescriptiveQuotes(line) {
-  return line.replace(/`[^`]*`|"[^"]*"|'[^']*'/g, (quoted) => " ".repeat(quoted.length));
+  return line.replace(/`[^`]*`|"[^"]*"|'[^']*'/g, (quoted, offset) => {
+    if (quoted.startsWith("`") && isExecutableInlineCode(line, offset, quoted)) return quoted;
+    return " ".repeat(quoted.length);
+  });
+}
+
+function isExecutableInlineCode(line, offset, quoted) {
+  const content = quoted.slice(1, -1);
+  if (!actionRules.some((rule) => {
+    rule.pattern.lastIndex = 0;
+    return rule.pattern.test(content);
+  })) return false;
+
+  const prefix = line.slice(0, offset);
+  return /\b(?:run|execute|perform|invoke|follow)\s*$/i.test(prefix);
 }

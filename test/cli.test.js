@@ -53,3 +53,12 @@ test("supports documented scan, render, and check invocations", () => {
   assert.equal(check.stderr, "");
   assert.match(check.stdout, /^# Side Effect Map/m);
 });
+
+test("check rejects an unapproved executable inline-code action", () => {
+  const result = run("check", "fixtures/skill-inline-code");
+
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /Check: fail/);
+  assert.match(result.stdout, /SKILL\.md:3 messaging requires explicit approval/);
+  assert.equal(result.stderr, "");
+});

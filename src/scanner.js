@@ -12,11 +12,16 @@ export async function scanPath(targetPath) {
     let fence = null;
     text.split(/\r?\n/).forEach((line, index) => {
       if (file.endsWith(".md")) {
+        const container = blockquoteContent(line);
         if (fence) {
-          if (isFenceCloser(line, fence)) fence = null;
-          return;
+          if (container.depth >= fence.blockquoteDepth) {
+            if (isFenceCloser(container.content, fence)) fence = null;
+            return;
+          }
+          fence = null;
         }
-        fence = fenceOpener(line);
+        fence = fenceOpener(container.content);
+        if (fence) fence.blockquoteDepth = container.depth;
         if (fence) return;
       }
       for (const match of classifyLine(line)) {
@@ -40,6 +45,17 @@ export async function scanPath(targetPath) {
     evidence,
     recommendations: recommendations(categories)
   };
+}
+
+function blockquoteContent(line) {
+  let content = line;
+  let depth = 0;
+  while (true) {
+    const match = /^ {0,3}>[ \t]?/.exec(content);
+    if (!match) return { content, depth };
+    content = content.slice(match[0].length);
+    depth += 1;
+  }
 }
 
 function fenceOpener(line) {

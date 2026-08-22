@@ -136,6 +136,23 @@ test("treats CommonMark fenced examples as descriptive and resumes after their c
   );
 });
 
+test("ignores CommonMark fences inside blockquotes and resumes after valid closers", async () => {
+  const report = await scanPath("fixtures/skill-blockquote-fences");
+  const result = checkReport(report);
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.failures, []);
+  assert.deepEqual(
+    report.evidence
+      .filter((item) => item.category === "messaging")
+      .map((item) => [item.file, item.line]),
+    [
+      ["fixtures/skill-blockquote-fences/SKILL.md", 11],
+      ["fixtures/skill-blockquote-fences/SKILL.md", 19]
+    ]
+  );
+});
+
 test("continues line scanning JSON that contains Markdown fence markers", async () => {
   const report = await scanPath("fixtures/skill-json-fence-like");
   const result = checkReport(report);
